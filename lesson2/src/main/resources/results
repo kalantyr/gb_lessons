@@ -1,0 +1,16 @@
+--------- Read speed ----------
+[ArrayList] count = 10 Speed (nanos) = 83
+[LinkedList] count = 10 Speed (nanos) = 114
+[ArrayList] count = 1000 Speed (nanos) = 33
+[LinkedList] count = 1000 Speed (nanos) = 734
+[ArrayList] count = 100000 Speed (nanos) = 9
+[LinkedList] count = 100000 Speed (nanos) = 111038
+[ArrayList] count = 10000000 Speed (nanos) = 0
+[LinkedList] count = 10000000 Speed (nanos) = 26392777
+--------- Remove speed ----------
+[ArrayList] count = 100 Speed (nanos) = 628
+[LinkedList] count = 100 Speed (nanos) = 596
+[ArrayList] count = 10000 Speed (nanos) = 792
+[LinkedList] count = 10000 Speed (nanos) = 6600
+[ArrayList] count = 100000 Speed (nanos) = 6659
+[LinkedList] count = 100000 Speed (nanos) = 64318

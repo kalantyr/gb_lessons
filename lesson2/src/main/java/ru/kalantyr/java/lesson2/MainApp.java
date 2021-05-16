@@ -13,7 +13,7 @@ public class MainApp {
 
     public static void main(String[] args) {
         System.out.println("--------- Read speed ----------");
-        for (var count: new int[] { 10, 1000, 100000 }) {
+        for (var count: new int[] { 10, 1000, 100000, 10000000 }) {
             var speed = readSpeedTest(new ArrayList<>(count), count);
             System.out.printf("[ArrayList] count = %d Speed (nanos) = %d%n", count, speed.toNanos());
             speed = readSpeedTest(new LinkedList<>(), count);
@@ -21,7 +21,7 @@ public class MainApp {
         }
 
         System.out.println("--------- Remove speed ----------");
-        for (var count: new int[] { 10, 1000, 100000 }) {
+        for (var count: new int[] { 100, 10000, 100000 }) {
             var speed = removeSpeedTest(new ArrayList<>(count), count);
             System.out.printf("[ArrayList] count = %d Speed (nanos) = %d%n", count, speed.toNanos());
             speed = removeSpeedTest(new LinkedList<>(), count);
