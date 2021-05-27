@@ -22,6 +22,8 @@ public class MainClass {
 
             race.getFinishCountDown().await(); // ждём, когда все машины закончат гонку
             System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Гонка закончилась!!!");
+
+            System.out.printf("%s - WIN", race.getWinner().getName());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
