@@ -53,8 +53,10 @@ public class Race {
     public void trySetWinner(Car winner) {
         try {
             lock.writeLock().lock();
-            if (this.winner == null)
+            if (this.winner == null) {
                 this.winner = winner;
+                // System.out.println("-> Победитель установлен: " + winner.getName());
+            }
         }
         finally{
             lock.writeLock().unlock();

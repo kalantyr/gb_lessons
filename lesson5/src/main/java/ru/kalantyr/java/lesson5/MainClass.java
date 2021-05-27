@@ -1,7 +1,5 @@
 package ru.kalantyr.java.lesson5;
 
-import java.util.concurrent.CountDownLatch;
-
 public class MainClass {
     public static final int CARS_COUNT = 4;
 
