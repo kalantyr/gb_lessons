@@ -55,7 +55,7 @@ public class Race {
             lock.writeLock().lock();
             if (this.winner == null) {
                 this.winner = winner;
-                // System.out.println("-> Победитель установлен: " + winner.getName());
+                System.out.println(winner.getName() + " - WIN");
             }
         }
         finally{
