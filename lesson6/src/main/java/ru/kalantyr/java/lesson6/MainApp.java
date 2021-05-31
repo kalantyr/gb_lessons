@@ -84,16 +84,12 @@ public class MainApp {
                 .filter(e -> e.getAge() == maxAge)
                 //.forEach(e -> System.out.println(""));
                 .collect(Collectors.toList());
-        System.out.println(oldest.size() + " самых старших сотрудников зовут: " + oldest.stream().map(Employee::getName).collect(Collectors.joining(", ")));
+        var names = oldest
+                .stream()
+                .map(Employee::getName)
+                .collect(Collectors.joining(", "));
 
-        var sum = Arrays
-                .stream(employees)
-                .mapToInt(Employee::getSalary)
-                // .average() // это работает криво (вместо int зачем-то возвращается OptionalDouble даже для IntStream)
-                .sum();
-        var averageSalary = sum / employees.length;
-
-        System.out.println("Средняя зарплата = " + averageSalary);
+        System.out.println(oldest.size() + " самых старших сотрудников зовут: " + names);
     }
 
     /**
