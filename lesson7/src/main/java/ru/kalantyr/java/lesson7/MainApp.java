@@ -5,8 +5,10 @@ import ru.kalantyr.orm.*;
 import java.sql.SQLException;
 
 public class MainApp {
+    private static final String fileName = "C:\\Temp\\lesson7.db";
+
     public static void main(String[] args) {
-        var dataContext = new DataContext("org.sqlite.JDBC", "jdbc:sqlite:C:\\Temp\\lesson7.db");
+        var dataContext = new DataContext("org.sqlite.JDBC", "jdbc:sqlite:" + fileName);
 
         var employees = new DataSet<>(dataContext, Employee.class);
         try {
