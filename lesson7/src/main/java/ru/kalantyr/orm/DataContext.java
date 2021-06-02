@@ -18,10 +18,22 @@ public class DataContext {
         this.connectionString = connectionString;
     }
 
-    public void execute(String sql) throws SQLException {
+    /**
+     * Выполняет указанный скрипт
+     * @throws SQLException
+     */
+    public boolean execute(String sql) throws SQLException {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(connectionString);
+
+            var st = connection.prepareStatement(sql);
+            try {
+                return st.execute();
+            }
+            finally {
+                st.close();
+            }
         }
         finally {
             if (connection != null)

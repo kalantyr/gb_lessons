@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class MainApp {
     public static void main(String[] args) {
-        var dataContext = new DataContext("org.sqlite.JDBC", "jdbc:sqlite:sample.db");
+        var dataContext = new DataContext("org.sqlite.JDBC", "jdbc:sqlite:C:\\Temp\\lesson7.db");
 
         var employees = new DataSet<>(dataContext, Employee.class);
         try {

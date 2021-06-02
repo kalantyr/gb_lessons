@@ -1,6 +1,9 @@
 package ru.kalantyr.orm;
 
+import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class DataSet<T> {
     private final DataContext dataContext;
@@ -26,8 +29,41 @@ public class DataSet<T> {
      * @param throwIfExists генерировать исключение, если таблица уже существует
      */
     public void create(boolean throwIfExists) throws SQLException {
-        var sql = String.format("CREATE TABLE %s (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, Name TEXT NOT NULL);", dataClass.getSimpleName());
+        var tableName = dataClass.getSimpleName(); // потенциально может быть два одинаково названных класса из разных пакетов, но для обучения и так сойдёт
+
+        if (throwIfExists)
+            if (tableExists())
+                throw new RuntimeException("Таблица уже существует");
+
+        var columns = Arrays
+                .stream(dataClass.getMethods())
+                .filter(m -> m.getName().startsWith("get"))
+                .map(DataSet::methodToColumn)
+                .collect(Collectors.joining(", "));
+
+        var sql = String.format("CREATE TABLE %s (%s);", tableName, columns);
         dataContext.execute(sql);
+    }
+
+    private static String methodToColumn(Method method) {
+        var type = "";
+        switch (method.getReturnType().getSimpleName()) {
+            case "String":
+                type = "TEXT";
+                break;
+            case "int":
+                type = "INTEGER";
+                break;
+        }
+        var name = method.getName().substring(3);
+        return name + " " + type;
+    }
+
+    /**
+     * Есть ли уже таблица в БД
+     */
+    public boolean tableExists() {
+        throw new UnsupportedOperationException();
     }
 
     /**
