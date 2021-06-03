@@ -12,7 +12,7 @@ public class MainApp {
 
         var employees = new DataSet<>(dataContext, Employee.class);
         try {
-            employees.create();
+            employees.create(true);
             employees.insert(new Employee("Оксана", 22, 20_000));
             employees.insert(new Employee("Глеб", 33, 30_000));
         } catch (SQLException e) {

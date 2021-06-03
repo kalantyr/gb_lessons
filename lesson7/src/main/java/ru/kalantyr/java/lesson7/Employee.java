@@ -9,6 +9,7 @@ public class Employee {
     @AppColumn(columnName = "Name")
     public String name;
 
+    // без аннотации тоже будет работать
     public int age;
 
     @AppColumn(columnName = "Salary")

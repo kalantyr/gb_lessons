@@ -13,9 +13,9 @@ public class DataSet<T> {
 
     public DataSet(DataContext dataContext, Class<T> dataClass) {
         this.dataClass = dataClass;
+
         if (dataContext == null)
             throw new IllegalArgumentException();
-
         this.dataContext = dataContext;
     }
 
@@ -49,6 +49,7 @@ public class DataSet<T> {
      * Возвращает поля, которые имеет смысл сохранять в БД
      */
     private Stream<Field> getFieldsForStore() {
+        // в рабочем варианте такое надо кэшировать, конечно
         return Arrays
                 .stream(dataClass.getFields())
                 .filter(f -> !Modifier.isFinal(f.getModifiers()))
@@ -94,8 +95,13 @@ public class DataSet<T> {
     /**
      * Есть ли уже таблица в БД
      */
-    public boolean tableExists() {
-        throw new UnsupportedOperationException();
+    public boolean tableExists() throws SQLException {
+        var sql = String.format("SELECT name FROM sqlite_master WHERE type='table' AND name='%s';", getTableName());
+        boolean exists = false;
+        var resultSet = dataContext.executeQuery(sql, resSet -> {
+            exists = true;
+        });
+        return exists;
     }
 
     /**
