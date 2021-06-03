@@ -3,6 +3,9 @@ package ru.kalantyr.java.lesson7;
 import ru.kalantyr.orm.AppColumn;
 import ru.kalantyr.orm.AppTable;
 
+/**
+ * DTO для работы с сотрудниками
+ */
 @AppTable(tableName = "Staff")
 public class Employee {
 

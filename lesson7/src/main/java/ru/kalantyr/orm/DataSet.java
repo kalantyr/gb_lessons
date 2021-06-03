@@ -8,6 +8,10 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Вспомогательный класс для сохранения/чтения DTO в БД
+ * @param <T> DTO-класс
+ */
 public class DataSet<T> {
     private final DataContext dataContext;
     private final Class<T> dataClass;

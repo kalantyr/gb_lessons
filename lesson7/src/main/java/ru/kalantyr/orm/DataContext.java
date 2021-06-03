@@ -1,11 +1,13 @@
 package ru.kalantyr.orm;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
+/**
+ * Вспомогательный класс для работы с БД
+ */
 public class DataContext {
     private final String driverName;
     private final String connectionString;
