@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 public class DataContext {
     private final String driverName;
@@ -25,22 +24,32 @@ public class DataContext {
      * Выполняет указанный скрипт
      * @throws SQLException
      */
-    public boolean execute(String sql) throws SQLException {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(connectionString);
-
-            var st = connection.prepareStatement(sql);
-            try {
+    public boolean execute(String sqlCommand) throws SQLException {
+        try (var connection = DriverManager.getConnection(connectionString)) {
+            try (var st = connection.prepareStatement(sqlCommand)) {
                 return st.execute();
             }
-            finally {
-                st.close();
-            }
         }
-        finally {
-            if (connection != null)
-                connection.close();
+    }
+
+    /**
+     * Выполняет скрипты в транзакции
+     * @throws SQLException
+     */
+    public void executeInTransation(Iterable<String> sqlCommands) throws SQLException {
+        try (var connection = DriverManager.getConnection(connectionString)) {
+            connection.setAutoCommit(false);
+            try {
+                for (var sql : sqlCommands) {
+                    try (var statement = connection.prepareStatement(sql)) {
+                        statement.execute();
+                    }
+                }
+                connection.commit();
+            } catch (SQLException e) {
+                connection.rollback();
+                throw e;
+            }
         }
     }
 
@@ -48,25 +57,13 @@ public class DataContext {
      * Делает выборку из БД
      * @throws SQLException
      */
-    public ResultSet executeQuery(String sql, Consumer<ResultSet> consumer) throws SQLException {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection(connectionString);
-
-            var st = connection.prepareStatement(sql);
-            try {
-                ResultSet resultSet = st.executeQuery();
-                while (resultSet.next())
+    public void executeQuery(String sql, Consumer<ResultSet> consumer) throws SQLException {
+        try (var connection = DriverManager.getConnection(connectionString)) {
+            try (var st = connection.prepareStatement(sql)) {
+                try (var resultSet = st.executeQuery()) {
                     consumer.accept(resultSet);
-                return resultSet;
+                }
             }
-            finally {
-                st.close();
-            }
-        }
-        finally {
-            if (connection != null)
-                connection.close();
         }
     }
 }

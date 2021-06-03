@@ -3,6 +3,7 @@ package ru.kalantyr.orm;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -23,7 +24,7 @@ public class DataSet<T> {
      * Создаёт таблицу в БД
      */
     public void create() throws SQLException {
-        create(false); // неудобно, что нельзя просто объявить значение параметра по умолчанию (прямо в сигнатуре), приходится перегрузки делать
+        create(false); // почему бы просто не объявить значение параметра по умолчанию (прямо в сигнатуре)
     }
 
     /**
@@ -97,11 +98,20 @@ public class DataSet<T> {
      */
     public boolean tableExists() throws SQLException {
         var sql = String.format("SELECT name FROM sqlite_master WHERE type='table' AND name='%s';", getTableName());
-        boolean exists = false;
-        var resultSet = dataContext.executeQuery(sql, resSet -> {
-            exists = true;
+
+        boolean[] exists = new boolean[1]; // костыльный костылище - заводится массив, чтобы обмануть компилятор
+        exists[0] = false;
+        dataContext.executeQuery(sql, resultSet -> {
+            try {
+                while (resultSet.next()) {
+                    exists[0] = true; // нельзя просто установить значение boolean-переменной, так как замыкание работает только на чтение
+                    break;
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         });
-        return exists;
+        return exists[0];
     }
 
     /**
@@ -120,9 +130,33 @@ public class DataSet<T> {
                 .map(f -> getStringValue(f, item))
                 .collect(Collectors.joining(", "));
 
-        var sql = String.format("INSERT INTO %s (%s) VALUES (%s);", tableName, names, values);
-        dataContext.execute(sql);
+        var command = String.format("INSERT INTO %s (%s) VALUES (%s);", tableName, names, values);
+        dataContext.execute(command);
 
+    }
+
+    /**
+     * Добавляет записи в таблицу
+     */
+    public void insert(Iterable<T> items) throws SQLException {
+        if (items == null)
+            throw new IllegalArgumentException();
+
+        var tableName = getTableName();
+
+        var names = getFieldsForStore()
+                .map(DataSet::getColumnName)
+                .collect(Collectors.joining(", "));
+
+        var commands = new ArrayList<String>();
+        for (var i: items) {
+            var values = getFieldsForStore()
+                    .map(f -> getStringValue(f, i))
+                    .collect(Collectors.joining(", "));
+
+            commands.add(String.format("INSERT INTO %s (%s) VALUES (%s);", tableName, names, values));
+        }
+        dataContext.executeInTransation(commands);
     }
 
     private String getStringValue(Field f, T item) {
