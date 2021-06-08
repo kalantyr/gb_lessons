@@ -1,7 +1,9 @@
 package ru.kalantyr.java.lesson8;
 
 import org.hibernate.cfg.Configuration;
+import ru.kalantyr.orm.IRepository;
 import ru.kalantyr.orm.Repository;
+import ru.kalantyr.orm.SearchMode;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -36,6 +38,24 @@ public class MainApp {
         print(r4);
         // --- output
         // Id = 1 Елена Петрова
+        // Id = 2 Иван Сидоров
+
+        // ---------- Третий контекст ----------
+
+        IRepository<Student> rep3 = new Repository<>(factory, Student.class);
+
+        System.out.println("Ищем что-то похожее на 'Петров'");
+        var searchResults = rep3.fullTextSearch("Петров", SearchMode.Like);
+        for (var st : searchResults)
+            print(st);
+        // --- output
+        // Id = 1 Елена Петрова
+
+        System.out.println("Ищем 'Сидоров'");
+        searchResults = rep3.fullTextSearch("Сидоров", SearchMode.Exact);
+        for (var st : searchResults)
+            print(st);
+        // --- output
         // Id = 2 Иван Сидоров
     }
 
