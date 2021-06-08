@@ -74,17 +74,20 @@ public class Repository<T> implements IRepository<T> {
                 throw new RuntimeException("Not implemented");
         }
 
-        var whereClause = StreamSupport.stream(getStringFields().spliterator(), false) // почему нельзя применить map() сразу к iterable? :(
-                .map(fn -> fn + " " + operator + " :paramName")
+        var whereClause = StreamSupport.stream(getStringFields().spliterator(), false) // ну почему нельзя применить map() просто к Iterable? :(
+                .map(fName -> String.format("%s %s :paramName", fName, operator))
                 .collect(Collectors.joining(" OR "));
         return "from " + getTableName() + " where " + whereClause;
     }
 
     private String getTableName() {
-        // возвожно, имеет смысл закэшировать
+        // возможно, имеет смысл закэшировать... а может и не стоит
         return dataClass.getSimpleName();
     }
 
+    /**
+     * Возвращает названия строковых полей, помеченных аннотацией @Column
+     */
     private Iterable<String> getStringFields() {
         if (stringFields != null)
             return stringFields;
