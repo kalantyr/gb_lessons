@@ -94,8 +94,8 @@ public class OrdersRepository {
         try {
             entityManager = factory.createEntityManager();
 
-            var q = "from OrderData";  // вот тут бы пригодилась конструкция nameof(OrderData)
-            TypedQuery<OrderData> query = entityManager.createQuery(q, OrderData.class);
+            // тут могла бы пригодиться C#-конструкция nameof(OrderData), чтобы не зашивать название класса
+            TypedQuery<OrderData> query = entityManager.createQuery("from OrderData", OrderData.class);
             return query.getResultList();
         }
         finally{
