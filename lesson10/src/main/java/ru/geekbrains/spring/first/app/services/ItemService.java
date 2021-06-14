@@ -22,7 +22,32 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
-    public Item save(Item item) {
+    public Item add(Item item) {
+        if (item == null)
+            throw new IllegalArgumentException();
+
+        checkItem(item);
+
         return itemRepository.save(item);
+    }
+
+    public void update(Item item) {
+        if (item == null)
+            throw new IllegalArgumentException();
+
+        checkItem(item);
+
+        itemRepository.save(item);
+    }
+
+    public void delete(long id) {
+        itemRepository.deleteById(id);
+    }
+
+    private void checkItem(Item item) {
+        // для более сложных проверок можно отдельный класс-валидатор сделать
+
+        if (item.getPrice() <= 0)
+            throw new RuntimeException("Цена должна быть положительной");
     }
 }

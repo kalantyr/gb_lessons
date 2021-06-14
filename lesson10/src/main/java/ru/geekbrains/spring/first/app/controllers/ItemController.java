@@ -1,7 +1,6 @@
 package ru.geekbrains.spring.first.app.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.geekbrains.spring.first.app.model.Item;
@@ -41,8 +40,20 @@ public class ItemController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED) // HTTP-201
     public Item createNewItem(@RequestBody Item item) {
-        return itemService.save(item);
+        return itemService.add(item);
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT) // HTTP-204
+    public void update(@RequestBody Item item) {
+        itemService.update(item);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT) // HTTP-204
+    public void del(@PathVariable Long id) {
+        itemService.delete(id);
     }
 }
