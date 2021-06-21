@@ -1,4 +1,4 @@
-package ru.kalantyr.data.dto;
+package ru.kalantyr.lesson11.dto;
 
 
 import org.springframework.beans.factory.annotation.Value;

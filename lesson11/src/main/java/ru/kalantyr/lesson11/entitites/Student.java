@@ -1,7 +1,6 @@
-package ru.kalantyr.data.entitites;
+package ru.kalantyr.lesson11.entitites;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;

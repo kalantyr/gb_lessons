@@ -1,7 +1,6 @@
-package ru.kalantyr.data.dto;
+package ru.kalantyr.lesson11.dto;
 
-import ru.kalantyr.data.entitites.Product;
-import lombok.AllArgsConstructor;
+import ru.kalantyr.lesson11.entitites.Product;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

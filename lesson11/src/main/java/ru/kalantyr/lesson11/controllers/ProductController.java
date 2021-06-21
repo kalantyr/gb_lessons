@@ -1,12 +1,10 @@
-package ru.kalantyr.data.controllers;
+package ru.kalantyr.lesson11.controllers;
 
-import ru.kalantyr.data.dto.ProductDtoClassProjection;
-import ru.kalantyr.data.dto.ProductDtoInterfaceProjection;
-import ru.kalantyr.data.entitites.Product;
-import ru.kalantyr.data.repositories.ProductRepository;
+import ru.kalantyr.lesson11.dto.ProductDtoClassProjection;
+import ru.kalantyr.lesson11.dto.ProductDtoInterfaceProjection;
+import ru.kalantyr.lesson11.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

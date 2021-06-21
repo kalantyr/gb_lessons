@@ -1,4 +1,4 @@
-package ru.kalantyr.data.entitites;
+package ru.kalantyr.lesson11.entitites;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
