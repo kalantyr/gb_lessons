@@ -14,6 +14,9 @@ import java.util.List;
 public class ItemController {
     private final ItemService itemService;
 
+    /**
+     * Получить список всех товаров
+     */
     @GetMapping("/all")
     public List<ItemDto> getAll() {
         return itemService.getAll();

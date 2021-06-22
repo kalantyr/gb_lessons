@@ -25,7 +25,6 @@ public class Mapper {
     public OrderItem map(OrderItemDto orderItemDto) {
         var orderItem = new OrderItem();
         orderItem.setId(orderItemDto.getId());
-        orderItem.setOrder(map(orderItemDto.getOrder()));
         orderItem.setItemId(orderItemDto.getItemId());
         orderItem.setCount(orderItemDto.getCount());
         orderItem.setPrice(orderItemDto.getPrice());
@@ -56,7 +55,11 @@ public class Mapper {
         var orderDto = new OrderDto();
         orderDto.setId(order.getId());
         orderDto.setUserId(order.getUserId());
-        orderDto.setItems(order.getItems().stream().map(this::map).collect(Collectors.toUnmodifiableList()));
+
+        var items = order.getItems();
+        if (items != null)
+            orderDto.setItems(items.stream().map(this::map).collect(Collectors.toUnmodifiableList()));
+
         return orderDto;
     }
 

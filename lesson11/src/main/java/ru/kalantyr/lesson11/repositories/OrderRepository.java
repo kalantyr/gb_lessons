@@ -15,4 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @EntityGraph(value = "Order.with-items")
     List<Order> findAll();
+
+    @EntityGraph(value = "Order.with-items")
+    List<Order> findAllByUserId(long userId);
 }

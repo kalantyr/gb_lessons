@@ -21,6 +21,10 @@ public class UserService {
         var user1 = new UserDto();
         user1.setName("Василий Пупкин");
         add(user1);
+
+        var user2 = new UserDto();
+        user2.setName("Иван Иванов");
+        add(user2);
     }
 
     public void add(UserDto userDto) {

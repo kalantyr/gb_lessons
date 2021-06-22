@@ -4,16 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kalantyr.lesson11.dto.OrderDto;
-import ru.kalantyr.lesson11.dto.OrderItemDto;
 import ru.kalantyr.lesson11.entitites.Mapper;
 import ru.kalantyr.lesson11.entitites.Order;
 import ru.kalantyr.lesson11.entitites.OrderItem;
 import ru.kalantyr.lesson11.repositories.ItemRepository;
-import ru.kalantyr.lesson11.repositories.OrderItemRepository;
 import ru.kalantyr.lesson11.repositories.OrderRepository;
-
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,32 +19,36 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final ItemRepository itemRepository;
     private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
     private final UserService userService;
     private final ItemService itemService;
     private final Mapper mapper = new Mapper();
 
+    // для тестирования наполнить БД можно и через db.migration
+    // но тогда нужно следить, чтобы структура таблиц и названия полей совпадали с объявленными в java (codeFirst vs dataFirst)
     @PostConstruct
     @Transactional
     public void init() {
-        // Доостаём первого попавшегося пользователя
-        var user = userService.getAll().get(0);
+        var rand = new Random();
 
         var items = itemService.getAll();
 
-        var orderDto = CreateOrder(user.getId());
-        for (var item : items)
-            addToOrder(orderDto.getId(), item.getId(), 3);
+        for (var user : userService.getAll())
+            for (var i = 0; i < 1 + rand.nextInt(5); i++) {
+                var orderDto = createOrder(user.getId());
+                for (var item : items)
+                    if (rand.nextBoolean())
+                        addToOrder(orderDto.getId(), item.getId(), 1 + rand.nextInt(10));
+            }
     }
 
     /**
      * Создаёт новый заказ
      * @return
      */
-    public OrderDto CreateOrder(Long userId) {
-        var orderDto = new OrderDto();
-        orderDto.setUserId(userId);
-        var order = orderRepository.save(mapper.map(orderDto));
+    public OrderDto createOrder(Long userId) {
+        var newOrder = new Order();
+        newOrder.setUserId(userId);
+        var order = orderRepository.save(newOrder);
         return mapper.map(order);
     }
 
@@ -57,41 +59,19 @@ public class OrderService {
      * @param count Скорлько товаров этого вида добавить
      */
     @Transactional
-    public OrderItemDto addToOrder(Long orderId, Long itemId, Integer count) {
+    public void addToOrder(Long orderId, Long itemId, Integer count) {
         var order = orderRepository.findById(orderId).orElseThrow();
-        var item = itemRepository.findById(itemId);
+        var item = itemRepository.findById(itemId).orElseThrow();
 
         var orderItem = new OrderItem();
         orderItem.setItemId(itemId);
-        orderItem.setPrice(item.orElseThrow().getPrice()); // берём цену на данный момент, фиксируем
+        orderItem.setPrice(item.getPrice()); // берём цену на данный момент, фиксируем
         orderItem.setCount(count);
         order.add(orderItem);
+
+        // не совсем понятно - как получить ID для orderItem после сохранения?
+        // искать orderItem в order.items по хэшу не получится, так как в заказе может быть несколько абсолютно одинаковых позиций
         orderRepository.save(order);
-//        orderItemRepository.save(orderItem);
-
-/*
-        var order = orderRepository.findById(orderId);
-//        var orderDto = mapper.map(order.orElseThrow());
-
-        var item = itemRepository.findById(itemId);
-        var itemDto = mapper.map(item.orElseThrow());
-
-        var orderItemDto = new OrderItemDto();
-//        orderItemDto.setOrder(orderDto);
-        orderItemDto.setItemId(itemId);
-        orderItemDto.setPrice(itemDto.getPrice()); // берём цену на данный момент, фиксируем
-        orderItemDto.setCount(count);
-
-        OrderItem oi = mapper.map(orderItemDto);
-        oi.setOrder(order.orElseThrow());
-        var orderItem = orderItemRepository.save(oi);
-
-//        var items = new ArrayList<>(order.orElseThrow().getItems());
-//        items.add(mapper.Map(orderItemDto));
-//        order.orElseThrow().setItems(new HashSet<>(items));
-//        orderRepository.save(order.orElseThrow());
-*/
-        return null;
     }
 
     public OrderDto getById(Long orderId) {
@@ -99,9 +79,17 @@ public class OrderService {
         return mapper.map(order.orElseThrow());
     }
 
-    public List<OrderDto> getAll() {
-        return orderRepository
-                .findAll()
+    /**
+     * Возвращает все заказы пользователя (если userId == null, то заказы всех пользователей)
+     */
+    public List<OrderDto> getAll(Long userId) {
+        List<Order> orders;
+        if (userId == null)
+            orders = orderRepository.findAll();
+        else
+            orders = orderRepository.findAllByUserId(userId);
+
+        return orders
                 .stream()
                 .map(mapper::map)
                 .collect(Collectors.toUnmodifiableList());
