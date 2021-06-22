@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kalantyr.lesson11.dto.OrderDto;
 import ru.kalantyr.lesson11.dto.OrderItemDto;
 import ru.kalantyr.lesson11.entitites.Mapper;
+import ru.kalantyr.lesson11.entitites.Order;
+import ru.kalantyr.lesson11.entitites.OrderItem;
 import ru.kalantyr.lesson11.repositories.ItemRepository;
 import ru.kalantyr.lesson11.repositories.OrderItemRepository;
 import ru.kalantyr.lesson11.repositories.OrderRepository;
@@ -20,14 +22,20 @@ public class OrderService {
     private final ItemRepository itemRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final UserService userService;
+    private final ItemService itemService;
     private final Mapper mapper = new Mapper();
 
     @PostConstruct
     public void init() {
-        var orderDto = CreateOrder(123L);
-        addToOrder(orderDto.getId(), 1L, 1);
-        addToOrder(orderDto.getId(), 2L, 2);
-        addToOrder(orderDto.getId(), 3L, 3);
+        // Доостаём первого попавшегося пользователя
+        var user = userService.getAll().get(0);
+
+        var items = itemService.getAll();
+
+        var orderDto = CreateOrder(user.getId());
+        for (var item : items)
+            addToOrder(orderDto.getId(), item.getId(), 3);
     }
 
     /**
@@ -37,8 +45,8 @@ public class OrderService {
     public OrderDto CreateOrder(Long userId) {
         var orderDto = new OrderDto();
         orderDto.setUserId(userId);
-        var order = orderRepository.save(mapper.Map(orderDto));
-        return mapper.Map(order);
+        var order = orderRepository.save(mapper.map(orderDto));
+        return mapper.map(order);
     }
 
     /**
@@ -49,27 +57,52 @@ public class OrderService {
      */
     @Transactional
     public OrderItemDto addToOrder(Long orderId, Long itemId, Integer count) {
+        var order = orderRepository.findById(orderId).orElseThrow();
+        var item = itemRepository.findById(itemId);
+
+        var orderItem = new OrderItem();
+        orderItem.setItemId(itemId);
+        orderItem.setPrice(item.orElseThrow().getPrice()); // берём цену на данный момент, фиксируем
+        orderItem.setCount(count);
+        order.add(orderItem);
+        orderRepository.save(order); // ошибки нет, но orderItem не сохраняется
+
+/*
         var order = orderRepository.findById(orderId);
-        var orderDto = mapper.Map(order.orElseThrow());
+//        var orderDto = mapper.map(order.orElseThrow());
 
         var item = itemRepository.findById(itemId);
-        var itemDto = mapper.Map(item.orElseThrow());
+        var itemDto = mapper.map(item.orElseThrow());
 
         var orderItemDto = new OrderItemDto();
-        orderItemDto.setOrder(orderDto);
+//        orderItemDto.setOrder(orderDto);
         orderItemDto.setItemId(itemId);
         orderItemDto.setPrice(itemDto.getPrice()); // берём цену на данный момент, фиксируем
         orderItemDto.setCount(count);
-        var orderItem = orderItemRepository.save(mapper.Map(orderItemDto));
 
-        return mapper.Map(orderItem);
+        OrderItem oi = mapper.map(orderItemDto);
+        oi.setOrder(order.orElseThrow());
+        var orderItem = orderItemRepository.save(oi);
+
+//        var items = new ArrayList<>(order.orElseThrow().getItems());
+//        items.add(mapper.Map(orderItemDto));
+//        order.orElseThrow().setItems(new HashSet<>(items));
+//        orderRepository.save(order.orElseThrow());
+*/
+        return null;
+    }
+
+    public OrderDto getById(Long orderId) {
+        var order = orderRepository.findById(orderId);
+        return mapper.map(order.orElseThrow());
     }
 
     public List<OrderDto> getAll() {
-        return orderRepository
-                .findAll()
+        List<Order> all = orderRepository
+                .findAll();
+        return all
                 .stream()
-                .map(mapper::Map)
+                .map(mapper::map)
                 .collect(Collectors.toUnmodifiableList());
     }
 }

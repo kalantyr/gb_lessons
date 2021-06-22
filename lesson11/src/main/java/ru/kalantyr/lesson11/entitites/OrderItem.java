@@ -31,7 +31,7 @@ public class OrderItem {
     @Column(name = "count")
     private Integer count;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
+    @ManyToOne(cascade = { CascadeType.ALL })
+    @JoinColumn(name = "orderId", referencedColumnName = "id")
     private Order order;
 }

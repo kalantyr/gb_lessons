@@ -30,4 +30,9 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private Set<OrderItem> items;
+
+    public void add(OrderItem orderItem) {
+        items.add(orderItem);
+        orderItem.setOrder(this);
+    }
 }

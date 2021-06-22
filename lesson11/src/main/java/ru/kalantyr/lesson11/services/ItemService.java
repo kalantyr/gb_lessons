@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.kalantyr.lesson11.dto.ItemDto;
 import ru.kalantyr.lesson11.entitites.Mapper;
 import ru.kalantyr.lesson11.repositories.ItemRepository;
-
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,14 +36,14 @@ public class ItemService {
 
     public void add(ItemDto itemDto)
     {
-        itemRepository.save(mapper.Map(itemDto));
+        itemRepository.save(mapper.map(itemDto));
     }
 
     public List<ItemDto> getAll() {
         return itemRepository
                 .findAll()
                 .stream()
-                .map(mapper::Map)
+                .map(mapper::map)
                 .collect(Collectors.toUnmodifiableList());
     }
 }
