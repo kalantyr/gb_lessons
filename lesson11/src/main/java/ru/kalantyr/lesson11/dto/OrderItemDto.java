@@ -10,8 +10,13 @@ import java.math.BigDecimal;
  */
 @Data
 @NoArgsConstructor
-public class OrderItem {
+public class OrderItemDto {
     private Long id;
+
+    /**
+     * Заказ, в который входит эта позиция
+     */
+    private OrderDto order;
 
     private Long itemId;
 

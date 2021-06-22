@@ -1,10 +1,10 @@
 package ru.kalantyr.lesson11.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.kalantyr.lesson11.repositories.UserRepository;
+import org.springframework.web.bind.annotation.*;
+import ru.kalantyr.lesson11.dto.ItemDto;
+import ru.kalantyr.lesson11.dto.OrderDto;
+import ru.kalantyr.lesson11.services.OrderService;
 
 import java.util.List;
 
@@ -12,5 +12,15 @@ import java.util.List;
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
-    private final UserRepository userRepository;
+    private final OrderService orderService;
+
+    @PutMapping("/create")
+    public OrderDto CreateOrder(@PathVariable Long userId) {
+        return orderService.CreateOrder(userId);
+    }
+
+    @GetMapping("/all")
+    public List<OrderDto> getAll() {
+        return orderService.getAll();
+    }
 }

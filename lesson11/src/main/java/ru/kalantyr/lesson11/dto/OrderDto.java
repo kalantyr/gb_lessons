@@ -2,17 +2,17 @@ package ru.kalantyr.lesson11.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.kalantyr.lesson11.entitites.OrderItem;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Заказ
  */
 @Data
 @NoArgsConstructor
-public class Order {
+public class OrderDto {
     private Long id;
     private Long userId;
-    private Set<OrderItem> items;
+    private List<OrderItemDto> items = new ArrayList<>();
 }

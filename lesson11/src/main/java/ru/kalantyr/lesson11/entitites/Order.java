@@ -12,6 +12,12 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @Table(name = "orders")
+@NamedEntityGraph(
+        name = "Order.with-items",
+        attributeNodes = {
+                @NamedAttributeNode("items")
+        }
+)
 public class Order {
 
     @Id
@@ -22,6 +28,6 @@ public class Order {
     @Column(name = "userId")
     private Long userId;
 
-    @OneToMany
+    @OneToMany(mappedBy = "order")
     private Set<OrderItem> items;
 }
