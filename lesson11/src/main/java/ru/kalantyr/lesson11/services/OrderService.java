@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kalantyr.lesson11.dto.OrderDto;
+import ru.kalantyr.lesson11.dto.UserDto;
 import ru.kalantyr.lesson11.entitites.Mapper;
 import ru.kalantyr.lesson11.entitites.Order;
 import ru.kalantyr.lesson11.entitites.OrderItem;
@@ -93,5 +94,17 @@ public class OrderService {
                 .stream()
                 .map(mapper::map)
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    /**
+     * Возвращает всех пользователей, купивших указанный товар
+     */
+    public List<UserDto> getUsersByItem(long itemId) {
+        var userIds = orderRepository.findUsersByItemIdForLesson(itemId);
+
+        // почему в java так сложно с readonly-перечислениями :(
+        var ids = userIds.stream().distinct().collect(Collectors.toUnmodifiableList());
+
+        return userService.getById(ids);
     }
 }

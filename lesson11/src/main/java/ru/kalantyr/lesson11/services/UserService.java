@@ -38,4 +38,14 @@ public class UserService {
                 .map(mapper::map)
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    /**
+     * Возвращает всех пользователей с указанными ID
+     */
+    public List<UserDto> getById(Iterable<Long> userIds) {
+        return userRepository.findAllById(userIds)
+                .stream()
+                .map(mapper::map)
+                .collect(Collectors.toUnmodifiableList());
+    }
 }
