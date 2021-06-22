@@ -3,7 +3,7 @@ package ru.kalantyr.lesson11.entitites;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Заказ
@@ -28,8 +28,8 @@ public class Order {
     @Column(name = "userId")
     private Long userId;
 
-    @OneToMany(mappedBy = "order")
-    private Set<OrderItem> items;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItem> items;
 
     public void add(OrderItem orderItem) {
         items.add(orderItem);

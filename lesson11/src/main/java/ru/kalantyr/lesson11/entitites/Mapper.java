@@ -1,7 +1,6 @@
 package ru.kalantyr.lesson11.entitites;
 
 import ru.kalantyr.lesson11.dto.*;
-
 import java.util.stream.Collectors;
 
 // наверно это можно сделать как-нибудь поизящнее (каким-нибудь автомаппером)
@@ -36,7 +35,6 @@ public class Mapper {
     public OrderItemDto map(OrderItem orderItem) {
         var orderItemDto = new OrderItemDto();
         orderItemDto.setId(orderItem.getId());
-        orderItemDto.setOrder(map(orderItem.getOrder()));
         orderItemDto.setItemId(orderItem.getItemId());
         orderItemDto.setCount(orderItem.getCount());
         orderItemDto.setPrice(orderItem.getPrice());
@@ -50,7 +48,7 @@ public class Mapper {
         var order = new Order();
         order.setId(orderDto.getId());
         order.setUserId(orderDto.getUserId());
-        order.setItems(orderDto.getItems().stream().map(this::map).collect(Collectors.toUnmodifiableSet()));
+        order.setItems(orderDto.getItems().stream().map(this::map).collect(Collectors.toUnmodifiableList()));
         return order;
     }
 

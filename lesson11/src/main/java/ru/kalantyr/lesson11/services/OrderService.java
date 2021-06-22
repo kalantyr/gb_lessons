@@ -27,6 +27,7 @@ public class OrderService {
     private final Mapper mapper = new Mapper();
 
     @PostConstruct
+    @Transactional
     public void init() {
         // Доостаём первого попавшегося пользователя
         var user = userService.getAll().get(0);
@@ -65,7 +66,8 @@ public class OrderService {
         orderItem.setPrice(item.orElseThrow().getPrice()); // берём цену на данный момент, фиксируем
         orderItem.setCount(count);
         order.add(orderItem);
-        orderRepository.save(order); // ошибки нет, но orderItem не сохраняется
+        orderRepository.save(order);
+//        orderItemRepository.save(orderItem);
 
 /*
         var order = orderRepository.findById(orderId);
@@ -98,9 +100,8 @@ public class OrderService {
     }
 
     public List<OrderDto> getAll() {
-        List<Order> all = orderRepository
-                .findAll();
-        return all
+        return orderRepository
+                .findAll()
                 .stream()
                 .map(mapper::map)
                 .collect(Collectors.toUnmodifiableList());
