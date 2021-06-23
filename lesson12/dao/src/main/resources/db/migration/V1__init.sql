@@ -56,9 +56,9 @@ values
 
 insert into users_roles (user_id, role_id)
 values
-(1, 1), -- Марь Ивановна - Учитель
-(2, 2), -- Вовочка - Учник
-(3, 3), (4, 3); -- Иван и Елена - Родитель
+(1, 1), -- Марь Ивановна (Учитель)
+(2, 2), -- Вовочка - (Ученик)
+(3, 3), (4, 3); -- Иван и Елена (Родитель)
 
 insert into roles_authorities (role_id, authority_id)
 values
