@@ -20,16 +20,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         log.info("Dao Authentication Provider");
         http.authorizeRequests()
-                .antMatchers("/auth_page/**").authenticated()
+                .antMatchers("/school/**").authenticated()
+//                .antMatchers("/auth_page/**").authenticated()
                 .antMatchers("/user_info").hasAnyAuthority("READ_ALL_MESSAGES")
                 .antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // ROLE_ADMIN, ROLE_SUPERADMIN
                 .anyRequest().permitAll()
                 .and()
-                .formLogin()
-                .and()
-                .sessionManagement()
-                .maximumSessions(1)
-                .maxSessionsPreventsLogin(true);
+                .httpBasic();
+//                .formLogin()
+//                .and()
+//                .sessionManagement()
+//                .maximumSessions(1)
+//                .maxSessionsPreventsLogin(true);
     }
 
     @Bean
