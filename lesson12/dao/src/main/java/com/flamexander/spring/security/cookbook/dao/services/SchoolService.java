@@ -1,9 +1,12 @@
 package com.flamexander.spring.security.cookbook.dao.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
@@ -58,8 +61,7 @@ public class SchoolService {
     private void demand(Right right) {
         var authorityName = right.name();
 
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var authorities = authentication.getAuthorities();
+        var authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         if (authorities.stream().anyMatch(a -> a.getAuthority().equals(authorityName)))
             return;
 
