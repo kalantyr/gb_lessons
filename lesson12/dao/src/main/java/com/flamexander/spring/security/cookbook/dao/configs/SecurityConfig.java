@@ -19,19 +19,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         log.info("Dao Authentication Provider");
-        http.authorizeRequests()
-                .antMatchers("/school/**").authenticated()
-//                .antMatchers("/auth_page/**").authenticated()
-                .antMatchers("/user_info").hasAnyAuthority("READ_ALL_MESSAGES")
-                .antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // ROLE_ADMIN, ROLE_SUPERADMIN
-                .anyRequest().permitAll()
+
+        http
+                .authorizeRequests()
+                    .antMatchers("/school/**").authenticated()
+                    .anyRequest().authenticated()
                 .and()
-                .httpBasic();
-//                .formLogin()
-//                .and()
-//                .sessionManagement()
-//                .maximumSessions(1)
-//                .maxSessionsPreventsLogin(true);
+                    .httpBasic()// чтобы из Postman можно было логиниться
+                .and().
+                    csrf().disable(); // чтобы PUT-запросы работали
     }
 
     @Bean

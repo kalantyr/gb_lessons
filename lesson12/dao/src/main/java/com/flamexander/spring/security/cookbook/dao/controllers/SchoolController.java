@@ -33,7 +33,7 @@ public class SchoolController {
      */
     @PutMapping("/homework")
     @ResponseStatus(HttpStatus.CREATED)
-    public void submitHomework(String homework) {
+    public void submitHomework(@RequestBody String homework) {
         schoolService.submitHomework(homework);
     }
 
@@ -42,9 +42,8 @@ public class SchoolController {
      */
     @PutMapping("/grade/{gr}")
     @ResponseStatus(HttpStatus.CREATED)
-    public String giveGrade(@PathVariable Integer gr) {
+    public void giveGrade(@PathVariable int gr) {
         schoolService.giveGrade(gr);
-        return "Q";
     }
 
     // на случай, если внутри сервиса сработала проверка прав

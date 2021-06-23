@@ -20,7 +20,7 @@ public class SchoolService {
      * Возвращает список уроков
      */
     public String[] getLessons() {
-        demand("LessonVew");
+        demand(Right.LessonVew);
         return lessons;
     }
 
@@ -28,7 +28,7 @@ public class SchoolService {
      * Возвращает список оценок
      */
     public int[] getGrades() {
-        demand("GradeView");
+        demand(Right.GradeView);
         return grades;
     }
 
@@ -36,7 +36,7 @@ public class SchoolService {
      * Сдать домашнюю работу
      */
     public void submitHomework(String homework) {
-        demand("SubmitHomework");
+        demand(Right.SubmitHomework);
         System.out.println(homework);
     }
 
@@ -44,7 +44,7 @@ public class SchoolService {
      * Дать оценку домашней работе
      */
     public void giveGrade(int grade) {
-        demand("GiveGrade");
+        demand(Right.GiveGrade);
         System.out.println(grade);
     }
 
@@ -55,7 +55,9 @@ public class SchoolService {
     /**
      * Проверяет наличие указанного права у текущего пользователя
      */
-    private void demand(String authorityName) {
+    private void demand(Right right) {
+        var authorityName = right.toString();
+
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var authorities = authentication.getAuthorities();
         if (authorities.stream().anyMatch(a -> a.getAuthority().equals(authorityName)))
