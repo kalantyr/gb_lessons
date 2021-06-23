@@ -1,10 +1,13 @@
 package ru.kalantyr.lesson11.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kalantyr.lesson11.dto.OrderDto;
 import ru.kalantyr.lesson11.dto.OrderItemDto;
 import ru.kalantyr.lesson11.dto.UserDto;
+import ru.kalantyr.lesson11.exceptions.OrderNotFoundException;
 import ru.kalantyr.lesson11.services.OrderService;
 
 import java.util.List;
@@ -20,6 +23,7 @@ public class OrderController {
      * @param userId для какого пользователя
      */
     @PutMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public OrderDto createOrder(@PathVariable Long userId) {
         return orderService.createOrder(userId);
     }
@@ -31,6 +35,7 @@ public class OrderController {
      * @param count сколько товара добавить
      */
     @PutMapping("/buy")
+    @ResponseStatus(HttpStatus.CREATED)
     public void buy(@PathVariable Long orderId, @PathVariable Long itemId, @PathVariable Integer count){
         orderService.addToOrder(orderId, itemId, count);
     }
@@ -65,5 +70,10 @@ public class OrderController {
     @GetMapping("/byItem/{itemId}")
     public List<UserDto> getByItem(@PathVariable Long itemId) {
         return orderService.getUsersByItem(itemId);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> catchException(OrderNotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

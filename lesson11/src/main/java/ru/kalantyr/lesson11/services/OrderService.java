@@ -8,6 +8,7 @@ import ru.kalantyr.lesson11.dto.UserDto;
 import ru.kalantyr.lesson11.entitites.Mapper;
 import ru.kalantyr.lesson11.entitites.Order;
 import ru.kalantyr.lesson11.entitites.OrderItem;
+import ru.kalantyr.lesson11.exceptions.OrderNotFoundException;
 import ru.kalantyr.lesson11.repositories.ItemRepository;
 import ru.kalantyr.lesson11.repositories.OrderRepository;
 import javax.annotation.PostConstruct;
@@ -76,8 +77,9 @@ public class OrderService {
     }
 
     public OrderDto getById(Long orderId) {
-        var order = orderRepository.findById(orderId);
-        return mapper.map(order.orElseThrow());
+        var order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Заказ не найден"));
+        return mapper.map(order);
     }
 
     /**
