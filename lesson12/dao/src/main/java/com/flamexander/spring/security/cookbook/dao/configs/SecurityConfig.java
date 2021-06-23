@@ -1,5 +1,6 @@
 package com.flamexander.spring.security.cookbook.dao.configs;
 
+import com.flamexander.spring.security.cookbook.dao.services.Right;
 import com.flamexander.spring.security.cookbook.dao.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +23,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
+                    .antMatchers("/school/lessons").hasAuthority(Right.LessonVew.name())
+                    .antMatchers("/school/grades").hasAuthority(Right.GradeView.name())
+                    .antMatchers("/school/homework").hasAuthority(Right.SubmitHomework.name())
+                    .antMatchers("/school/grade/**").hasAuthority(Right.GiveGrade.name())
                     .antMatchers("/school/**").authenticated()
                     .anyRequest().authenticated()
                 .and()
-                    .httpBasic()// чтобы из Postman можно было логиниться
+                    .httpBasic() // чтобы из Postman можно было логиниться
                 .and().
                     csrf().disable(); // чтобы PUT-запросы работали
     }

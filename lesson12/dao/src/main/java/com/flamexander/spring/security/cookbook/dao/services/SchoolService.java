@@ -56,7 +56,7 @@ public class SchoolService {
      * Проверяет наличие указанного права у текущего пользователя
      */
     private void demand(Right right) {
-        var authorityName = right.toString();
+        var authorityName = right.name();
 
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var authorities = authentication.getAuthorities();
