@@ -1,5 +1,6 @@
 package com.flamexander.spring.security.cookbook.dao.configs;
 
+import com.flamexander.spring.security.cookbook.dao.services.Right;
 import com.flamexander.spring.security.cookbook.dao.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,17 +20,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         log.info("Dao Authentication Provider");
-        http.authorizeRequests()
-                .antMatchers("/auth_page/**").authenticated()
-                .antMatchers("/user_info").hasAnyAuthority("READ_ALL_MESSAGES")
-                .antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // ROLE_ADMIN, ROLE_SUPERADMIN
-                .anyRequest().permitAll()
+
+        http
+                .authorizeRequests()
+                    .antMatchers("/school/lessons").hasAuthority(Right.LessonVew.name())
+                    .antMatchers("/school/grades").hasAuthority(Right.GradeView.name())
+                    .antMatchers("/school/homework").hasAuthority(Right.SubmitHomework.name())
+                    .antMatchers("/school/grade/**").hasAuthority(Right.GiveGrade.name())
+                    .antMatchers("/school/**").authenticated()
+                    .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .and()
-                .sessionManagement()
-                .maximumSessions(1)
-                .maxSessionsPreventsLogin(true);
+                    .httpBasic() // чтобы из Postman можно было логиниться
+                .and().
+                    csrf().disable(); // чтобы PUT-запросы работали
     }
 
     @Bean
