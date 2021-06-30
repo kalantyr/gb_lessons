@@ -3,6 +3,7 @@ package ru.kalantyr.lesson11.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.kalantyr.lesson11.dto.ItemDto;
+import ru.kalantyr.lesson11.entitites.Item;
 import ru.kalantyr.lesson11.entitites.Mapper;
 import ru.kalantyr.lesson11.repositories.ItemRepository;
 import javax.annotation.PostConstruct;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public class ItemService {
     private final ItemRepository itemRepository;
     private final Mapper mapper = new Mapper();
-
+/*
     @PostConstruct
     public void init() {
         ItemDto item1 = new ItemDto();
@@ -33,6 +34,7 @@ public class ItemService {
         item3.setPrice(BigDecimal.valueOf(4_999.90));
         add(item3);
     }
+*/
 
     public ItemDto add(ItemDto itemDto)
     {
