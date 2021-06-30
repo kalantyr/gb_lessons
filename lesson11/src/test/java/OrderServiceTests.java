@@ -2,16 +2,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
-import ru.kalantyr.lesson11.dto.ItemDto;
-import ru.kalantyr.lesson11.dto.UserDto;
+import ru.kalantyr.lesson11.dto.*;
 import ru.kalantyr.lesson11.exceptions.OrderNotFoundException;
-import ru.kalantyr.lesson11.repositories.*;
 import ru.kalantyr.lesson11.services.*;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -26,12 +21,6 @@ public class OrderServiceTests {
 
     @Autowired
     private UserService userService;
-
-//    @MockBean
-//    private ItemRepository itemRepository;
-//
-//    @MockBean
-//    private UserRepository userRepository;
 
     @Test
     public void addToOrderTest() {
