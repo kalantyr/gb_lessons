@@ -34,9 +34,9 @@ public class ItemService {
         add(item3);
     }
 
-    public void add(ItemDto itemDto)
+    public ItemDto add(ItemDto itemDto)
     {
-        itemRepository.save(mapper.map(itemDto));
+        return mapper.map(itemRepository.save(mapper.map(itemDto)));
     }
 
     public List<ItemDto> getAll() {
