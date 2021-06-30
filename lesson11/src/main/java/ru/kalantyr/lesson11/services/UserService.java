@@ -27,8 +27,8 @@ public class UserService {
         add(user2);
     }
 
-    public void add(UserDto userDto) {
-        userRepository.save(mapper.map(userDto));
+    public UserDto add(UserDto userDto) {
+        return mapper.map(userRepository.save(mapper.map(userDto)));
     }
 
     public List<UserDto> getAll() {
