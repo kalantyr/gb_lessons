@@ -19,6 +19,14 @@ public class OrdersController {
         this.ordersService = ordersService;
     }
 
+    /**
+     * Получение заказа по его ID
+     */
+    @GetMapping("/{id}")
+    public Order getById(@PathVariable long id) {
+        return ordersService.getById(id);
+    }
+
     @GetMapping
     public List<Order> getAllOrders() {
         return ordersService.findAllOrders();
@@ -26,8 +34,8 @@ public class OrdersController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createNewOrder(@RequestBody Order order) {
-        int x = 10 / 0;
+    public Order createNewOrder(@RequestBody Order order) {
         ordersService.save(order);
+        return order;
     }
 }

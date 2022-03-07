@@ -20,6 +20,13 @@ public class OrdersService {
         return ordersRepository.findAll();
     }
 
+    /**
+     * Возвращает заказ по его ID
+     */
+    public Order getById(long id) {
+        return ordersRepository.getById(id);
+    }
+
     public void save(Order order) {
         ordersRepository.save(order);
     }
